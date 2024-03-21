@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+import "./App.css";
 import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 
@@ -82,9 +82,13 @@ function App() {
     <Container
       className="d-flex align-items-center"
       align="center"
-      style={{ background: "white", minHeight: "100vh" }}
+      style={{
+        background: "white",
+        minHeight: "100vh",
+        backgroundImage: 'url("ramadan-background.avif")',
+      }}
     >
-      <Form className="mx-auto">
+      <Form className="mx-auto form">
         <Col>
           <Form.Text
             style={{ color: "black", fontWeight: "bolder", fontSize: "20px" }}
@@ -93,15 +97,15 @@ function App() {
           </Form.Text>
         </Col>
         <Col>
-          <Form.Text style={{ fontStyle: "italic" }}>
+          <Form.Text style={{ fontStyle: "italic", fontWeight: "bold" }}>
             You are invited to the family Iftar party
           </Form.Text>
         </Col>
-        <Form.Text style={{ fontStyle: "italic" }}>
+        <Form.Text style={{ fontStyle: "italic", fontWeight: "bold" }}>
           Date: March 30, 2024
         </Form.Text>
         <Col>
-          <Form.Text style={{ fontStyle: "italic" }}>
+          <Form.Text style={{ fontStyle: "italic", fontWeight: "bold" }}>
             Location: Jalalabad Bhaban, Astoria NY
           </Form.Text>
         </Col>
@@ -144,11 +148,11 @@ function App() {
             </Col>
             {/* <Col xs={4}>
               <Form.Control
-                id="age"
-                name="age"
-                placeholder="Adult or Child?"
-                value={member.age}
-                onChange={(e) => handleAgeChange(e, idx)}
+              id="age"
+              name="age"
+              placeholder="Adult or Child?"
+              value={member.age}
+              onChange={(e) => handleAgeChange(e, idx)}
               />
             </Col> */}
             <Col xs={4}>
