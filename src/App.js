@@ -7,6 +7,7 @@ import {
   InputGroup,
   Row,
   Modal,
+  Alert,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -18,6 +19,7 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [show, setShow] = useState(false);
+  const [submitError, setsubmitError] = useState(false);
 
   const handleAddFamily = () => {
     setfamilyMembers([...familyMembers, { name: "", age: "" }]);
@@ -39,6 +41,7 @@ function App() {
     const list = [...familyMembers];
     list[idx][name] = value;
     setfamilyMembers(list);
+    console.log(familyMembers);
   };
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -47,20 +50,27 @@ function App() {
     setPhoneNumber(e.target.value);
   };
   const handleSubmit = () => {
-    try {
-      const docRef = addDoc(collection(db, "RSVP"), {
-        familyMembers,
-        phoneNumber,
-        email,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+    if (phoneNumber) {
+      try {
+        const docRef = addDoc(collection(db, "RSVP"), {
+          familyMembers,
+          phoneNumber,
+          email,
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      setfamilyMembers([{ name: "", age: "" }]);
+      setEmail("");
+      setPhoneNumber("");
+      handleShow();
+    } else {
+      setsubmitError(true);
+      setTimeout(() => {
+        setsubmitError(false);
+      }, 3000);
     }
-    setfamilyMembers([{ name: "", age: "" }]);
-    setEmail("");
-    setPhoneNumber("");
-    handleShow();
   };
 
   //MODAL
@@ -75,13 +85,30 @@ function App() {
       style={{ background: "white", minHeight: "100vh" }}
     >
       <Form className="mx-auto">
-        <Form.Text style={{ color: "black", fontWeight: "bolder" }}>
-          RSVP
+        <Col>
+          <Form.Text
+            style={{ color: "black", fontWeight: "bolder", fontSize: "20px" }}
+          >
+            RSVP
+          </Form.Text>
+        </Col>
+        <Col>
+          <Form.Text style={{ fontStyle: "italic" }}>
+            You are invited to the family Iftar party
+          </Form.Text>
+        </Col>
+        <Form.Text style={{ fontStyle: "italic" }}>
+          Date: March 30, 2024
         </Form.Text>
+        <Col>
+          <Form.Text style={{ fontStyle: "italic" }}>
+            Location: Jalalabad Bhaban, Astoria NY
+          </Form.Text>
+        </Col>
         <InputGroup className="mt-3">
           <InputGroup.Text id="basic-addon2">Phone Number</InputGroup.Text>
           <Form.Control
-            placeholder="999 999 9999"
+            placeholder=""
             name="phoneNumber"
             aria-label="Phone Number"
             aria-describedby="basic-addon2"
@@ -115,7 +142,7 @@ function App() {
                 onChange={(e) => handleNameChange(e, idx)}
               />
             </Col>
-            <Col xs={4}>
+            {/* <Col xs={4}>
               <Form.Control
                 id="age"
                 name="age"
@@ -123,6 +150,19 @@ function App() {
                 value={member.age}
                 onChange={(e) => handleAgeChange(e, idx)}
               />
+            </Col> */}
+            <Col xs={4}>
+              <Form.Select
+                id="age"
+                name="age"
+                placeholder="Adult or Child?"
+                value={member.age}
+                onChange={(e) => handleAgeChange(e, idx)}
+              >
+                <option></option>
+                <option value="adult">Adult</option>
+                <option value="child">Child</option>
+              </Form.Select>
             </Col>
             {familyMembers.length > 1 && (
               <Col xs="auto">
@@ -142,6 +182,13 @@ function App() {
         <Button className="mt-3 mx-3" onClick={handleSubmit}>
           Submit Your RSVP
         </Button>
+        {submitError ? (
+          <Alert className="mt-3" variant="danger">
+            Please Enter a Valid Phone Number
+          </Alert>
+        ) : (
+          ""
+        )}
       </Form>
       <>
         {/* Modal */}
